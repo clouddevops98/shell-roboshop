@@ -1,12 +1,12 @@
 #!/bin/bash
 
 AMI_ID="ami-039d79c9003bed147"
-$G_ID="sg-04f9b24ffc7783a86"
+SG_ID="sg-04f9b24ffc7783a86"sg-04f9b24ffc7783a86
 
 for instance in $@
 do
     INSTANCE_ID=$(aws ec2 run-instances --image-id $AMI_ID --instance-type t3.micro --security-group-ids 
-    $G_ID --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" --query 'Instances
+    $SG_ID --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$instance}]" --query 'Instances
     [0].InstanceId' --output text)
    
    #Get Private IP
