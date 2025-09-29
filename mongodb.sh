@@ -34,7 +34,7 @@ dnf install mongodb-org -y &>>$LOG_FILE
 VALIDATE $? "Installing MongoDB"
 
 systemctl enable mongod &>>$LOG_FILE
-VALIDATE $? "Installing MongoDB"
+VALIDATE $? "enable MongoDB"
 
 systemctl start mongod &>>$LOG_FILE
 VALIDATE $? "Start MongoDB"
