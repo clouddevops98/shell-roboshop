@@ -12,6 +12,7 @@ SCRIPT_DIR=$PWD
 MONGODB_HOST=mongodb.somayya.fun
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" # /var/log/shell-script/16-logs.log
 MYSQL_HOST=mysql.somayya.fun
+
 mkdir -p $LOGS_FOLDER
 echo "Script started executed at: $(date)" | tee -a $LOG_FILE
 
@@ -30,36 +31,15 @@ VALIDATE(){ # functions receive inputs through args just like shell script args
 }
 
 
+dnf install maven -y &>>$LOG_FILE
 
-mkdir  -p /app 
-VALIDATE $? "Creating app directory"
-
-curl -o /tmp/shipping
-.zip https://roboshop-artifacts.s3.amazonaws.com/shipping
--v3.zip &>>$LOG_FILE
-VALIDATE $? "Downloading shipping
- application"
-
-cd /app
-VALIDATE $? "Changing app directory"
-
-rm -rf /app/*
-VALIDATE $? "Removing existing code"
-
-unzip /tmp/shipping
-.zip &>>$LOG_FILE
-VALIDATE $? "unzip shipping
-"
-
-dnf install maven -y
 
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then
-    
-     useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
-     VALIDATE $? "Creating system user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop &>>$LOG_FILE
+    VALIDATE $? "Creating system user"
 else
-     echo  -e "cart already exist ... $Y SKIPPING $N"
+    echo  -e "user already exist ... $Y SKIPPING $N"
 fi
 
 mkdir  -p /app 
@@ -80,13 +60,13 @@ VALIDATE $? "unzip shipping"
 mvn clean package &>>$LOG_FILE
 mv target/shipping-1.0.jar shipping.jar 
 
-cp $SCRIPT_DIR/shipping.service 
+cp $SCRIPT_DIR/shipping.service /etc/systemd/system/shipping.service
 systemctl daemon-reload
 systemctl enable shipping &>>$LOG_FILE
 
 dnf install mysql -y &>>$LOG_FILE
 
-mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities'
+mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
 if [ $? -ne 0]; then
     mysql -h $MYSQL_HOST-uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
     mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
