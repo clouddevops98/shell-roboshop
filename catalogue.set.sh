@@ -47,9 +47,9 @@ npm install &>>$LOG_FILE
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 systemctl daemon-reload
 systemctl enable catalogue &>>$LOG_FILE
-echo "Catalogue application setup ... $G SUCCESS $N"
+echo  -e "Catalogue application setup ... $G SUCCESS $N"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-dnf install mongodb-mongoshsfds -y &>>$LOG_FILE
+dnf install mongodb-mongosh -y &>>$LOG_FILE
 
 
 INDEX=$(mongosh mongodb.somayya.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
