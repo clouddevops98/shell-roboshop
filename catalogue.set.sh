@@ -30,7 +30,7 @@ fi
 dnf module disable nodejs -y &>>$LOG_FILE
 dnf module enable nodejs:20 -y &>>$LOG_FILE
 dnf install nodejs -y &>>$LOG_FILE
-
+echo -e "Installing NodeJS 20 ... $G SUCCESS $N"
 
 id roboshop &>>$LOG_FILE
 if [ $? -ne 0 ]; then 
@@ -43,12 +43,11 @@ curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue
 cd /app
 rm -rf /app/*
 unzip /tmp/catalogue.zip &>>$LOG_FILE
-
 npm install &>>$LOG_FILE
 cp $SCRIPT_DIR/catalogue.service /etc/systemd/system/catalogue.service
 systemctl daemon-reload
 systemctl enable catalogue &>>$LOG_FILE
-
+echo "Catalogue application setup ... $G SUCCESS $N"
 cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
 dnf install mongodb-mongoshsfds -y &>>$LOG_FILE
 
@@ -62,3 +61,4 @@ else
 fi
 
 systemctl start catalogue
+echo -e "Loarding products and restarting catalogue ... $G SUCCESS $N"
