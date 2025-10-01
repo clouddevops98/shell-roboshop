@@ -9,7 +9,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1 )
 SCRIPT_DIR=$PWD
-MONGODB_HOST=mongodb.somayya.fun
+MONGODB_HOST=mongodb.daws86s.fun
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" # /var/log/shell-script/16-logs.log
 
 mkdir -p $LOGS_FOLDER
@@ -34,15 +34,15 @@ dnf module enable nginx:1.24 -y &>>$LOG_FILE
 dnf install nginx -y &>>$LOG_FILE
 VALIDATE $? "Installing Nginx"
 
-systemctl enable nginx &>>$LOG_FILE
+systemctl enable nginx  &>>$LOG_FILE
 systemctl start nginx 
-VALIDATE $? "Starting  Nginx"
+VALIDATE $? "Starting Nginx"
 
 rm -rf /usr/share/nginx/html/* 
 curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip &>>$LOG_FILE
 cd /usr/share/nginx/html 
 unzip /tmp/frontend.zip &>>$LOG_FILE
-VALIDATE $? "Downloading  frontend"
+VALIDATE $? "Downloading frontend"
 
 rm -rf /etc/nginx/nginx.conf
 cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf
